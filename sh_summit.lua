@@ -1,8 +1,8 @@
 Summit = {}
 
-Summit.REALM_SERVER = 0
-Summit.REALM_CLIENT = 1
-Summit.REALM_SHARED = 2
+Summit.SERVER = 0
+Summit.CLIENT = 1
+Summit.SHARED = 2
 
 ---@param path string
 local function defineRealm(path)
@@ -10,11 +10,11 @@ local function defineRealm(path)
     local prefix, suffix = string.Left(fname, 3), string.Right(fname, 3)
 
     if fname == 'init' or prefix == 'sv_' or suffix == '_sv' then
-        return Summit.REALM_SERVER
+        return Summit.SERVER
     elseif prefix == 'cl_' or suffix == '_cl' then
-        return Summit.REALM_CLIENT
+        return Summit.CLIENT
     elseif fname == 'shared' or prefix == 'sh_' or suffix == '_sh' then
-        return Summit.REALM_SHARED
+        return Summit.SHARED
     end
 
     return nil
@@ -26,15 +26,15 @@ end
 function Summit.File(path, realm)
     realm = realm or defineRealm(path)
 
-    if realm == Summit.REALM_SERVER and SERVER then
+    if realm == Summit.SERVER and SERVER then
         return include(path)
-    elseif realm == Summit.REALM_CLIENT then
+    elseif realm == Summit.CLIENT then
         if SERVER then
             AddCSLuaFile(path)
         else -- CLIENT
             return include(path)
         end
-    elseif realm == Summit.REALM_SHARED then
+    elseif realm == Summit.SHARED then
         if SERVER then
             AddCSLuaFile(path)
         end
