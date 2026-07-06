@@ -58,7 +58,11 @@ function Summit.Dir(path, recursive)
 
     if recursive then
         if type(recursive) == 'number' then
-            recursive = recursive > 1 and recursive - 1 or nil
+            if recursive <= 1 then
+                return
+            end
+
+            recursive = recursive - 1
         end
 
         for _, dir in ipairs(dirs) do
